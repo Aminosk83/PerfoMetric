@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+      
+    <p:outputPanel styleClass="ui-fluid" rendered="#{not primesBean.isPermitted(primesBean.primes, 'primes:read')}">
+        <h:outputText value="#{messages.access_denied}" />
+    </p:outputPanel>
+    
+    <h:panelGrid rendered="#{primesBean.isPermitted(primesBean.primes, 'primes:read')}">
+       
+       <p:commandButton value="#{messages.dialog_primes_create_idEmployee}" icon="ui-icon-plusthick" title="#{messages.label_create}"
+                  actionListener="#{employeesBean.prepareNewEmployees()}"
+                  update=":createIdEmployeeDialog :growlForm:growl" resetValues="true"
+                  oncomplete="PF('createIdEmployeeDialogWidget').show()" partialSubmit="true" process="@this"
+                  rendered="#{primesBean.isPermitted('employees:create') and primesBean.isPermitted(primesBean.primes, 'primes:update')}"
+                  style="float:right;">
+       </p:commandButton>
+       
+       <p:pickList id="primesIdEmployeesPickList" var="employees" itemLabel="#{employees.codeEmployee}"
+                   value="#{primesBean.idEmployees}" itemValue="#{employees}"
+                   showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+                   disabled="#{not primesBean.isPermitted(primesBean.primes, 'primes:update')}">
+           <o:converter converterId="omnifaces.ListConverter" list="#{primesBean.fullIdEmployeesList}"/>
+         <p:ajax event="transfer" listener="#{primesBean.onIdEmployeesPickListTransfer}" partialSubmit="true" process="@this" />
+         <f:facet name="sourceCaption"><h:outputText value="#{messages.label_picklist_available}" /></f:facet>
+         <f:facet name="targetCaption"><h:outputText value="#{messages.label_picklist_assigned}" /></f:facet>
+       </p:pickList>
+</h:panelGrid>
+</html>

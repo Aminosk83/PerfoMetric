@@ -1,0 +1,714 @@
+{
+  "info1": "======================================================================================================",
+  "info2": "= This Project was generated with generjee. http://generjee.com                                      =",
+  "info3": "= You can import this file into the generjee tool, then change the project model and generate again. =",
+  "info4": "======================================================================================================",
+  "entities": [
+    {
+      "name": "User",
+      "id": "User",
+      "lookupField": "email",
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": "username",
+          "name": "Username",
+          "type": "String",
+          "editable": false,
+          "showInTable": true,
+          "stringLength": 50,
+          "required": true
+        },
+        {
+          "id": "password",
+          "name": "Password",
+          "type": "Password",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": "email",
+          "name": "E-mail",
+          "type": "String",
+          "editable": false,
+          "showInTable": true,
+          "stringLength": 50,
+          "required": true
+        },
+        {
+          "id": "roles",
+          "name": "Roles",
+          "type": "Enumeration",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": "status",
+          "name": "Status",
+          "type": "Enumeration",
+          "editable": false,
+          "showInTable": true,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "id": 1000,
+      "lookupField": "productname",
+      "exportable": true,
+      "attachmentsEnabled": true,
+      "imageUploadEnabled": true,
+      "auditEnabled": true,
+      "aclEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": "0",
+          "readPerm": 1,
+          "updatePerm": "0",
+          "deletePerm": "0",
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": "1",
+          "readPerm": 0,
+          "updatePerm": "1",
+          "deletePerm": "1",
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": "productname",
+          "name": "Code_Employee",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "50",
+          "required": true
+        },
+        {
+          "id": "price",
+          "name": "Name",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "200",
+          "required": true
+        },
+        {
+          "id": "stock",
+          "name": "Id_User",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:1",
+          "referenceEntity": "User"
+        },
+        {
+          "id": "launch",
+          "name": "Id_Poste",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:n",
+          "referenceEntity": "Postes"
+        },
+        {
+          "id": "discontinued",
+          "name": "Create_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": 1,
+          "name": "Update_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": 2,
+          "name": "Status_Id",
+          "type": "Number",
+          "editable": true,
+          "showInTable": true,
+          "integerLength": 5,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Departements",
+      "id": 1,
+      "lookupField": 0,
+      "exportable": true,
+      "attachmentsEnabled": true,
+      "imageUploadEnabled": true,
+      "auditEnabled": true,
+      "aclEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": "0",
+          "readPerm": 1,
+          "updatePerm": "0",
+          "deletePerm": "0",
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": 2,
+          "name": "Code_Departement",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "50",
+          "required": true
+        },
+        {
+          "id": 3,
+          "name": "Name_Departement",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "100",
+          "required": true
+        },
+        {
+          "id": 4,
+          "name": "Created_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": 5,
+          "name": "Updated_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Postes",
+      "id": 2,
+      "lookupField": 0,
+      "exportable": true,
+      "attachmentsEnabled": true,
+      "imageUploadEnabled": true,
+      "auditEnabled": true,
+      "aclEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": "0",
+          "readPerm": "1",
+          "updatePerm": "0",
+          "deletePerm": "0",
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": 2,
+          "name": "Code_Poste",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": 50,
+          "required": true
+        },
+        {
+          "id": 3,
+          "name": "Name_Poste",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "100",
+          "required": true
+        },
+        {
+          "id": 4,
+          "name": "Description",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "1000",
+          "required": false
+        },
+        {
+          "id": 5,
+          "name": "Created_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": 6,
+          "name": "Updated_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": 7,
+          "name": "Id_Departement",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:n",
+          "referenceEntity": "Departements"
+        }
+      ]
+    },
+    {
+      "name": "Objectifs",
+      "id": 3,
+      "lookupField": 0,
+      "exportable": true,
+      "attachmentsEnabled": true,
+      "imageUploadEnabled": true,
+      "auditEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": 2,
+          "name": "Code_Objectif",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": 50,
+          "required": false
+        },
+        {
+          "id": 3,
+          "name": "Name_Objectif",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "100",
+          "required": true
+        },
+        {
+          "id": 4,
+          "name": "Poids",
+          "type": "Decimal",
+          "editable": true,
+          "showInTable": true,
+          "integerLength": "3",
+          "fractionLength": 2,
+          "required": true
+        },
+        {
+          "id": 5,
+          "name": "Description",
+          "type": "String",
+          "editable": true,
+          "showInTable": true,
+          "stringLength": "200",
+          "required": false
+        },
+        {
+          "id": 6,
+          "name": "Created_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        },
+        {
+          "id": 7,
+          "name": "Updated_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Primes",
+      "id": 4,
+      "lookupField": 0,
+      "exportable": true,
+      "auditEnabled": true,
+      "aclEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": "0",
+          "readPerm": 1,
+          "updatePerm": "0",
+          "deletePerm": "0",
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": 2,
+          "name": "Id_Employee",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:n",
+          "referenceEntity": "Employees"
+        },
+        {
+          "id": 3,
+          "name": "Created_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Resultas",
+      "id": 5,
+      "lookupField": 0,
+      "exportable": true,
+      "auditEnabled": true,
+      "aclEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": "0",
+          "readPerm": 1,
+          "updatePerm": "0",
+          "deletePerm": "0",
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": 2,
+          "name": "Id_employee",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:n",
+          "referenceEntity": "Employees"
+        },
+        {
+          "id": 3,
+          "name": "Somme",
+          "type": "Decimal",
+          "editable": true,
+          "showInTable": true,
+          "integerLength": 5,
+          "fractionLength": "3",
+          "required": true
+        },
+        {
+          "id": 4,
+          "name": "Created_at",
+          "type": "Date",
+          "editable": true,
+          "showInTable": true,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "Objectifs_user",
+      "id": 8,
+      "lookupField": 0,
+      "auditEnabled": true,
+      "authorization": [
+        {
+          "roleId": 1,
+          "roleName": "Administrator",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 1,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 2,
+          "roleName": "Public",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        },
+        {
+          "roleId": 3,
+          "roleName": "superviseur",
+          "createPerm": 1,
+          "readPerm": 1,
+          "updatePerm": 1,
+          "deletePerm": 1,
+          "changeOwnerPerm": 0,
+          "ownerRoleEnabled": false
+        }
+      ],
+      "fields": [
+        {
+          "id": 0,
+          "name": "id",
+          "type": "Autoincremented ID",
+          "editable": false,
+          "showInTable": false,
+          "required": true
+        },
+        {
+          "id": 1,
+          "name": "Id_Objectifs",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:n",
+          "referenceEntity": "Objectifs"
+        },
+        {
+          "id": 2,
+          "name": "Id_Postes",
+          "type": "Relation",
+          "editable": true,
+          "showInTable": true,
+          "referenceType": "1:n",
+          "referenceEntity": "Postes"
+        }
+      ]
+    }
+  ],
+  "appSettings": {
+    "generjeeversion": "1.0",
+    "appName": "PerfoMetric",
+    "package": "org.application",
+    "masterDetailsStyle": "1",
+    "dataListStyle": "1",
+    "pfTheme": "bootstrap",
+    "runtarget": "as",
+    "layer": {
+      "rest": false
+    },
+    "manageRolesAndUsers": true,
+    "createRegistrationForm": false,
+    "roles": [
+      {
+        "id": 1,
+        "name": "Administrator",
+        "canBeDeleted": false
+      },
+      {
+        "id": 2,
+        "name": "Public",
+        "canBeDeleted": false
+      },
+      {
+        "id": 3,
+        "name": "superviseur",
+        "canBeDeleted": true
+      }
+    ]
+  },
+  "guid": "02e412e0-71d2-4201-a969-fc8c38ef04b0"
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+  <h:form>
+  <p:menu>
+    <p:submenu label="#{messages.menu_pages}">
+      
+      <p:menuitem value="#{messages.menu_employeess}" url="/pages/employees/employees.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+      <p:menuitem value="#{messages.menu_departementss}" url="/pages/departements/departements.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+      <p:menuitem value="#{messages.menu_postess}" url="/pages/postes/postes.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+      <p:menuitem value="#{messages.menu_objectifss}" url="/pages/objectifs/objectifs.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+      <p:menuitem value="#{messages.menu_primess}" url="/pages/primes/primes.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+      <p:menuitem value="#{messages.menu_resultass}" url="/pages/resultas/resultas.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+      <p:menuitem value="#{messages.menu_objectifsusers}" url="/pages/objectifsuser/objectifsuser.xhtml" icon="icon-entity" ajax="false" async="false" />
+      
+    </p:submenu>
+    
+    <p:submenu label="#{messages.menu_admin}" rendered="#{p:ifGranted('Administrator')}">
+      <p:menuitem value="#{messages.menu_user_management}" url="/pages/admin/user.xhtml" icon="ui-icon-person" ajax="false" async="false"/>
+    </p:submenu>
+    
+  </p:menu>
+  </h:form>
+</ui:composition>
+</html>

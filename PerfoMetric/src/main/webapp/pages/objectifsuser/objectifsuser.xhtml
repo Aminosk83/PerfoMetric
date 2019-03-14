@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="objectifsuserDataForm" onkeypress="if (event.keyCode == 13) {return false; }">
+
+        <p:dataTable id="objectifsuserTable" value="#{objectifsuserBean.objectifsuserList}" var="objectifsuser" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="objectifsuserTable" emptyMessage="#{messages.label_no_records_found}"
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="#{messages.create_new_objectifsuser}" icon="ui-icon-plusthick" action="#{objectifsuserBean.prepareNewObjectifsuser()}"
+                      resetValues="true" update=":editObjectifsuserDialog" oncomplete="PF('editObjectifsuserDialogWidget').show()"
+                      style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="#{messages.table_select_columns}" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="objectifsuserTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column headerText="#{messages.field_label_objectifsuser_idObjectifs_plural}" styleClass="action-column" exportable="false">
+            
+            <p:commandButton icon="ui-icon-transfer-e-w"  title="#{messages.field_label_objectifsuser_idObjectifs_plural}" action="#{objectifsuserBean.onIdObjectifssDialog(objectifsuser)}" oncomplete="PF('objectifsuserIdObjectifssDialogWidget').show()" update=":objectifsuserIdObjectifssDialog"/>
+            
+          </p:column>
+          
+          <p:column headerText="#{messages.field_label_objectifsuser_idPostes_plural}" styleClass="action-column" exportable="false">
+            
+            <p:commandButton icon="ui-icon-transfer-e-w"  title="#{messages.field_label_objectifsuser_idPostes_plural}" action="#{objectifsuserBean.onIdPostessDialog(objectifsuser)}" oncomplete="PF('objectifsuserIdPostessDialogWidget').show()" update=":objectifsuserIdPostessDialog"/>
+            
+          </p:column>
+          
+          <p:column styleClass="action-column" headerText="#{messages.table_actions_column}" width="115" exportable="false">
+            
+            <p:commandButton icon="ui-icon-zoomin" update=":viewObjectifsuserDialog" oncomplete="PF('viewObjectifsuserDialogWidget').show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{objectifsuser}" target="#{objectifsuserBean.objectifsuser}" />
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-pencil" update=":editObjectifsuserDialog"
+                resetValues="true" 
+                action="#{objectifsuserBean.onDialogOpen(objectifsuser)}"
+                oncomplete="PF('editObjectifsuserDialogWidget').show()"
+                title="#{messages.label_edit}" >
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-close" 
+                oncomplete="PF('deleteObjectifsuserDialogWidget').show()"
+                title="#{messages.label_delete}" >
+                <f:setPropertyActionListener value="#{objectifsuser}"
+                    target="#{objectifsuserBean.objectifsuser}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+    </h:form>
+
+    <p:confirmDialog id="deleteObjectifsuserDialog" widgetVar="deleteObjectifsuserDialogWidget"
+        header="#{messages.label_confirm_deletion}"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="#{messages.label_delete_record}" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_yes}" action="#{objectifsuserBean.delete}" update=":objectifsuserDataForm :growlForm:growl" oncomplete="PF('deleteObjectifsuserDialogWidget').hide()" />
+              <p:commandButton value="#{messages.label_no}" onclick="PF('deleteObjectifsuserDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+    <p:dialog dynamic="true" id="editObjectifsuserDialog" header="#{messages.label_objectifsuser_caption}"
+            modal="true" widgetVar="editObjectifsuserDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsuserBean.reset}"/>
+        <h:form id="editObjectifsuserForm" >
+            <p:outputPanel id="objectifsuserEditPanel">
+                <ui:include src="/pages/objectifsuser/objectifsuserEditInclude.xhtml"/>
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                            icon="ui-icon-disk" action="#{objectifsuserBean.persist}"
+                            update=":editObjectifsuserForm:objectifsuserEditPanel :objectifsuserDataForm :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('editObjectifsuserDialogWidget').hide()" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('editObjectifsuserDialogWidget').hide()" type="button" />
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="viewObjectifsuserDialog" header="#{messages.label_objectifsuser_caption}" modal="true" widgetVar="viewObjectifsuserDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsuserBean.reset}" />
+        <h:form id="viewObjectifsuserForm">
+          <ui:include src="/pages/objectifsuser/objectifsuserViewInclude.xhtml"/>
+          <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('viewObjectifsuserDialogWidget').hide()" type="button" />
+          </div>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="objectifsuserIdObjectifssDialog" header="#{messages.dialog_header_objectifsuser_idObjectifs_plural}" modal="true" widgetVar="objectifsuserIdObjectifssDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsuserBean.reset}" />
+        <p:outputPanel id="objectifsuserIdObjectifssPanel">
+            <h:form id="objectifsuserIdObjectifssForm">
+                <ui:include src="/pages/objectifsuser/objectifsuserIdObjectifsInclude.xhtml" />
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                        icon="ui-icon-disk"
+                        action="#{objectifsuserBean.onIdObjectifssSubmit}"
+                        update=":growlForm:growl"
+                        oncomplete="if(!args.validationFailed) PF('objectifsuserIdObjectifssDialogWidget').hide()"
+                        partialSubmit="true" process="@this" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('objectifsuserIdObjectifssDialogWidget').hide()" type="button" />
+                </div>
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="objectifsuserIdPostessDialog" header="#{messages.dialog_header_objectifsuser_idPostes_plural}" modal="true" widgetVar="objectifsuserIdPostessDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsuserBean.reset}" />
+        <p:outputPanel id="objectifsuserIdPostessPanel">
+            <h:form id="objectifsuserIdPostessForm">
+                <ui:include src="/pages/objectifsuser/objectifsuserIdPostesInclude.xhtml" />
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                        icon="ui-icon-disk"
+                        action="#{objectifsuserBean.onIdPostessSubmit}"
+                        update=":growlForm:growl"
+                        oncomplete="if(!args.validationFailed) PF('objectifsuserIdPostessDialogWidget').hide()"
+                        partialSubmit="true" process="@this" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('objectifsuserIdPostessDialogWidget').hide()" type="button" />
+                </div>
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="createIdObjectifsDialog"
+        header="#{messages.dialog_objectifsuser_create_idObjectifs}" modal="true"
+        widgetVar="createIdObjectifsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsBean.reset}" />
+        <p:outputPanel id="createIdObjectifsPanel">
+                <h:form id="createIdObjectifsForm">
+                    <ui:include src="/pages/objectifs/objectifsEditInclude.xhtml">
+                        <ui:param name="hideObjectifsuserSelectInput" value="true" />
+                    </ui:include>
+                    <div style="text-align: center; margin: 10px">
+                        <p:commandButton
+                            action="#{objectifsuserBean.updateIdObjectifs(objectifsBean.objectifs)}"
+                            value="#{messages.label_save}" icon="ui-icon-disk"
+                            actionListener="#{objectifsBean.persist}"
+                            update=":objectifsuserIdObjectifssPanel :createIdObjectifsPanel :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('createIdObjectifsDialogWidget').hide()" />
+                        <p:commandButton value="#{messages.label_close}"
+                            icon="ui-icon-close"
+                            onclick="PF('createIdObjectifsDialogWidget').hide()"
+                            type="button" />
+                    </div>
+                </h:form>
+            </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="createIdPostesDialog"
+        rendered="#{objectifsuserBean.isPermitted('postes:create')}"
+        header="#{messages.dialog_objectifsuser_create_idPostes}" modal="true"
+        widgetVar="createIdPostesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{postesBean.reset}" />
+        <p:outputPanel id="createIdPostesPanel">
+                <h:form id="createIdPostesForm">
+                    <ui:include src="/pages/postes/postesEditInclude.xhtml">
+                        <ui:param name="hideObjectifsuserSelectInput" value="true" />
+                    </ui:include>
+                    <div style="text-align: center; margin: 10px">
+                        <p:commandButton
+                            action="#{objectifsuserBean.updateIdPostes(postesBean.postes)}"
+                            value="#{messages.label_save}" icon="ui-icon-disk"
+                            actionListener="#{postesBean.persist}"
+                            update=":objectifsuserIdPostessPanel :createIdPostesPanel :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('createIdPostesDialogWidget').hide()" />
+                        <p:commandButton value="#{messages.label_close}"
+                            icon="ui-icon-close"
+                            onclick="PF('createIdPostesDialogWidget').hide()"
+                            type="button" />
+                    </div>
+                </h:form>
+            </p:outputPanel>
+    </p:dialog>
+    
+  </ui:define>
+</ui:composition>
+</html>

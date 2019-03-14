@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+
+        <p:outputPanel styleClass="ui-fluid">
+
+            <p:panel id="departementsImage" header="#{messages.label_image}" style="max-width:400px">
+                <o:graphicImage value="#{departementsBean.uploadedImageContents}" dataURI="true"
+                    rendered="#{not empty departementsBean.uploadedImageContents}" width="200px" />
+                <p:fileUpload mode="advanced" fileLimit="1"
+                    fileUploadListener="#{departementsBean.handleImageUpload}" update="departementsImage :growlForm:growl"
+                    cancelLabel="#{messages.upload_cancel}" uploadLabel="#{messages.upload_upload}" label="#{messages.upload_choose}"
+                    multiple="false" style="overflow:auto;width:380px"/>
+            </p:panel>
+            <p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-6,ui-grid-col-2" layout="grid" style="max-width:400px">
+                <h:outputLabel value="#{messages.field_label_departements_codeDepartement}:" for="codeDepartementEditInput" />
+                <p:inputText value="#{departementsBean.departements.codeDepartement}" id="codeDepartementEditInput" 
+                    label="#{messages.field_label_departements_codeDepartement}" />
+                <p:message for="codeDepartementEditInput" display="icon" />
+                <h:outputLabel value="#{messages.field_label_departements_nameDepartement}:" for="nameDepartementEditInput" />
+                <p:inputText value="#{departementsBean.departements.nameDepartement}" id="nameDepartementEditInput" 
+                    label="#{messages.field_label_departements_nameDepartement}" />
+                <p:message for="nameDepartementEditInput" display="icon" />
+                <h:outputLabel value="#{messages.field_label_departements_createdat}:" for="createdatEditInput" />
+                <p:calendar id="createdatEditInput" navigator="true" value="#{departementsBean.departements.createdat}" label="#{messages.field_label_departements_createdat}" />
+                <p:message for="createdatEditInput" display="icon" />
+                <h:outputLabel value="#{messages.field_label_departements_updatedat}:" for="updatedatEditInput" />
+                <p:calendar id="updatedatEditInput" navigator="true" value="#{departementsBean.departements.updatedat}" label="#{messages.field_label_departements_updatedat}" />
+                <p:message for="updatedatEditInput" display="icon" />
+            </p:panelGrid>
+        </p:outputPanel>
+</html>

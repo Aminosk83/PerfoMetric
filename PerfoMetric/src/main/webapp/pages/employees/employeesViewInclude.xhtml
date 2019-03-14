@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+
+    <p:outputPanel styleClass="ui-fluid" rendered="#{not employeesBean.isPermitted(employeesBean.employees, 'employees:read')}">
+        <h:outputText value="#{messages.access_denied}" />
+    </p:outputPanel>
+    
+    <p:panel header="#{messages.label_image}" style="max-width:400px" rendered="#{employeesBean.isPermitted(employeesBean.employees, 'employees:read')}">
+        <o:graphicImage value="#{employeesBean.uploadedImageContents}" dataURI="true"
+            rendered="#{not empty employeesBean.uploadedImageContents}" width="200px"/>
+    </p:panel>
+    
+    <h:panelGrid columns="2" styleClass="dialog" columnClasses="col1,col2" rendered="#{employeesBean.isPermitted(employeesBean.employees, 'employees:read')}">
+        
+        <h:outputText value="#{messages.field_label_employees_codeEmployee}:" />
+        <h:outputText value="#{employeesBean.employees.codeEmployee}" />
+
+        <h:outputText value="#{messages.field_label_employees_name}:" />
+        <h:outputText value="#{employeesBean.employees.name}" />
+
+        <h:outputText value="#{messages.field_label_employees_idUser}:" />
+        <h:outputText value="#{employeesBean.employees.idUser.email}" />
+
+        <h:outputText value="#{messages.field_label_employees_createat}:" />
+        <h:outputText value="#{employeesBean.employees.createat}" ><f:convertDateTime /></h:outputText>
+
+        <h:outputText value="#{messages.field_label_employees_updateat}:" />
+        <h:outputText value="#{employeesBean.employees.updateat}" ><f:convertDateTime /></h:outputText>
+
+        <h:outputText value="#{messages.field_label_employees_statusId}:" />
+        <h:outputText value="#{employeesBean.employees.statusId}" />
+
+        <h:outputText value="#{messages.audit_created}:" />
+        <h:panelGroup>
+            <h:outputText value="#{employeesBean.employees.createdAt}"><f:convertDateTime type="both" /></h:outputText>
+            <h:outputText value=", #{employeesBean.employees.createdBy}"/>
+        </h:panelGroup>
+        
+        <h:outputText value="#{messages.audit_modified}:" />
+        <h:panelGroup>
+            <h:outputText value="#{employeesBean.employees.modifiedAt}"><f:convertDateTime type="both" /></h:outputText>
+            <h:outputText value=", #{employeesBean.employees.modifiedBy}"/>
+        </h:panelGroup>
+        
+    </h:panelGrid>
+</html>

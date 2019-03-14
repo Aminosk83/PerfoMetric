@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="primesDataForm" onkeypress="if (event.keyCode == 13) {return false; }">
+
+        <p:dataTable id="primesTable" value="#{primesBean.primesList}" var="primes" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="primesTable" emptyMessage="#{messages.label_no_records_found}"
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="#{messages.create_new_primes}" icon="ui-icon-plusthick" action="#{primesBean.prepareNewPrimes()}"
+                      resetValues="true" update=":editPrimesDialog" oncomplete="PF('editPrimesDialogWidget').show()"
+                      rendered="#{primesBean.isPermitted('primes:create')}" style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="#{messages.table_select_columns}" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="primesTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column headerText="#{messages.field_label_primes_createdat}" sortBy="#{primes.createdat}" filterBy="#{primes.createdat}">
+            <f:facet name="filter">
+                <p:inputText id="createdatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('primesTable').filter(); updateCreatedatFilter(); return false;}" >
+                    <p:remoteCommand name="updateCreatedatFilter" update="primesTable:createdatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{primes.createdat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_primes_idEmployee_plural}" styleClass="action-column" exportable="false">
+            
+            <p:commandButton icon="ui-icon-transfer-e-w"  title="#{messages.field_label_primes_idEmployee_plural}" action="#{primesBean.onIdEmployeesDialog(primes)}" oncomplete="PF('primesIdEmployeesDialogWidget').show()" update=":primesIdEmployeesDialog"/>
+            
+          </p:column>
+          
+          <p:column styleClass="action-column" headerText="#{messages.table_actions_column}" width="115" exportable="false">
+            
+            <p:commandButton icon="ui-icon-zoomin" update=":viewPrimesDialog" oncomplete="PF('viewPrimesDialogWidget').show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{primes}" target="#{primesBean.primes}" />
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-pencil" update=":editPrimesDialog"
+                resetValues="true" rendered="#{primesBean.isPermitted(primes, 'primes:update')}"
+                action="#{primesBean.onDialogOpen(primes)}"
+                oncomplete="PF('editPrimesDialogWidget').show()"
+                title="#{messages.label_edit}" >
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-close" rendered="#{primesBean.isPermitted(primes, 'primes:delete')}"
+                oncomplete="PF('deletePrimesDialogWidget').show()"
+                title="#{messages.label_delete}" >
+                <f:setPropertyActionListener value="#{primes}"
+                    target="#{primesBean.primes}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+        <h:panelGrid columns="2">
+            <p:panel header="#{messages.export_all_data}">
+
+                <h:commandLink>
+                    <h:graphicImage  name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="primesTable" fileName="Primess"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="primesTable" fileName="Primess"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="primesTable" fileName="Primess" />
+                </h:commandLink>
+
+            </p:panel>
+            
+            <p:panel header="#{messages.export_page_data}">
+                <h:commandLink>
+                    <h:graphicImage name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="primesTable" fileName="Primess" pageOnly="true"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="primesTable" fileName="Primess" pageOnly="true"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="primesTable" fileName="Primess" pageOnly="true"/>
+                </h:commandLink>
+                
+            </p:panel>
+        </h:panelGrid>
+        
+    </h:form>
+
+    <p:confirmDialog id="deletePrimesDialog" widgetVar="deletePrimesDialogWidget"
+        rendered="#{primesBean.isPermitted(primesBean.primes, 'primes:delete')}" header="#{messages.label_confirm_deletion}"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="#{messages.label_delete_record}" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_yes}" action="#{primesBean.delete}" update=":primesDataForm :growlForm:growl" oncomplete="PF('deletePrimesDialogWidget').hide()" />
+              <p:commandButton value="#{messages.label_no}" onclick="PF('deletePrimesDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+    <p:dialog dynamic="true" id="editPrimesDialog" header="#{messages.label_primes_caption}"
+            modal="true" widgetVar="editPrimesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{primesBean.reset}"/>
+        <h:form id="editPrimesForm" >
+            <p:outputPanel id="primesEditPanel">
+                <ui:include src="/pages/primes/primesEditInclude.xhtml"/>
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                            icon="ui-icon-disk" action="#{primesBean.persist}"
+                            update=":editPrimesForm:primesEditPanel :primesDataForm :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('editPrimesDialogWidget').hide()" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('editPrimesDialogWidget').hide()" type="button" />
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="viewPrimesDialog" header="#{messages.label_primes_caption}" modal="true" widgetVar="viewPrimesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{primesBean.reset}" />
+        <h:form id="viewPrimesForm">
+          <ui:include src="/pages/primes/primesViewInclude.xhtml"/>
+          <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('viewPrimesDialogWidget').hide()" type="button" />
+          </div>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="primesIdEmployeesDialog" header="#{messages.dialog_header_primes_idEmployee_plural}" modal="true" widgetVar="primesIdEmployeesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{primesBean.reset}" />
+        <p:outputPanel id="primesIdEmployeesPanel">
+            <h:form id="primesIdEmployeesForm">
+                <ui:include src="/pages/primes/primesIdEmployeeInclude.xhtml" />
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                        icon="ui-icon-disk"
+                        action="#{primesBean.onIdEmployeesSubmit}"
+                        update=":growlForm:growl"
+                        oncomplete="if(!args.validationFailed) PF('primesIdEmployeesDialogWidget').hide()"
+                        rendered="#{primesBean.isPermitted(primesBean.primes, 'primes:update')}"
+                        partialSubmit="true" process="@this" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('primesIdEmployeesDialogWidget').hide()" type="button" />
+                </div>
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="createIdEmployeeDialog"
+        rendered="#{primesBean.isPermitted('employees:create')}"
+        header="#{messages.dialog_primes_create_idEmployee}" modal="true"
+        widgetVar="createIdEmployeeDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{employeesBean.reset}" />
+        <p:outputPanel id="createIdEmployeePanel">
+                <h:form id="createIdEmployeeForm">
+                    <ui:include src="/pages/employees/employeesEditInclude.xhtml">
+                        <ui:param name="hidePrimesSelectInput" value="true" />
+                    </ui:include>
+                    <div style="text-align: center; margin: 10px">
+                        <p:commandButton
+                            action="#{primesBean.updateIdEmployee(employeesBean.employees)}"
+                            value="#{messages.label_save}" icon="ui-icon-disk"
+                            actionListener="#{employeesBean.persist}"
+                            update=":primesIdEmployeesPanel :createIdEmployeePanel :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('createIdEmployeeDialogWidget').hide()" />
+                        <p:commandButton value="#{messages.label_close}"
+                            icon="ui-icon-close"
+                            onclick="PF('createIdEmployeeDialogWidget').hide()"
+                            type="button" />
+                    </div>
+                </h:form>
+            </p:outputPanel>
+    </p:dialog>
+    
+  </ui:define>
+</ui:composition>
+</html>

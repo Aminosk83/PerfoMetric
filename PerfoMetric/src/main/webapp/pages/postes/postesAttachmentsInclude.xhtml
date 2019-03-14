@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <p:outputPanel styleClass="ui-fluid" rendered="#{not postesBean.isPermitted(postesBean.postes, 'postes:read')}">
+        <h:outputText value="#{messages.access_denied}" />
+    </p:outputPanel>
+    
+    <p:outputPanel styleClass="ui-fluid" rendered="#{postesBean.isPermitted(postesBean.postes, 'postes:read')}">
+        <h:form enctype="multipart/form-data" rendered="#{postesBean.isPermitted(postesBean.postes, 'postes:update')}">
+          <h:outputText value="#{messages.label_upload_files}" />
+          <p:fileUpload immediate="true"
+              fileUploadListener="#{postesBean.handleAttachmentUpload}"
+              update=":postesAttachmentsPanel" style="overflow:auto;height:120px;width:620px" fileLimit="1" />
+        </h:form>
+        <h:form>
+          <p:dataTable scrollable="true" scrollHeight="270" resizableColumns="true"
+              rendered="#{not empty postesBean.postesAttachments}" style="width:620px"
+              var="attachment" value="#{postesBean.postesAttachments}">
+            <f:facet name="header"><h:outputText value="#{messages.attachments_uploaded}: " /></f:facet>
+            <p:column headerText="#{messages.attachment_filename}" width="500">
+                <p:commandButton ajax="false" icon="ui-icon-arrowthickstop-1-s">
+                    <p:fileDownload value="#{postesBean.getAttachmentStreamedContent(attachment)}" />
+                </p:commandButton>
+                <h:outputText value=" #{attachment.fileName}" />
+            </p:column>
+            <p:column width="40">
+                <p:commandButton icon="ui-icon-close" title="#{messages.label_delete}" rendered="#{postesBean.isPermitted(postesBean.postes, 'postes:update')}"
+                    action="#{postesBean.deleteAttachment(attachment)}" update="@form :growlForm:growl" />
+            </p:column>
+          </p:dataTable>
+        </h:form>
+    </p:outputPanel>
+
+</html>

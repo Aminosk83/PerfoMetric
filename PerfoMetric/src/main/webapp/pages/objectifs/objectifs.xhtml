@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="objectifsDataForm" onkeypress="if (event.keyCode == 13) {return false; }">
+
+        <p:dataTable id="objectifsTable" value="#{objectifsBean.objectifsList}" var="objectifs" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="objectifsTable" emptyMessage="#{messages.label_no_records_found}"
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="#{messages.create_new_objectifs}" icon="ui-icon-plusthick" action="#{objectifsBean.prepareNewObjectifs()}"
+                      resetValues="true" update=":editObjectifsDialog" oncomplete="PF('editObjectifsDialogWidget').show()"
+                      style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="#{messages.table_select_columns}" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="objectifsTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column headerText="#{messages.label_image}">
+              <o:graphicImage value="#{objectifs.image.content}" dataURI="true"
+                  rendered="#{not empty objectifs.image.content}" width="50px"/>
+          </p:column>
+          
+          <p:column  headerText="#{messages.field_label_objectifs_codeObjectif}" sortBy="#{objectifs.codeObjectif}" filterBy="#{objectifs.codeObjectif}">
+            <f:facet name="filter">
+                <p:inputText id="codeObjectifFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('objectifsTable').filter(); updateCodeObjectifFilter(); return false; }" >
+                    <p:remoteCommand name="updateCodeObjectifFilter" update="objectifsTable:codeObjectifFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{objectifs.codeObjectif}" />
+          </p:column>
+
+          <p:column  headerText="#{messages.field_label_objectifs_nameObjectif}" sortBy="#{objectifs.nameObjectif}" filterBy="#{objectifs.nameObjectif}">
+            <f:facet name="filter">
+                <p:inputText id="nameObjectifFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('objectifsTable').filter(); updateNameObjectifFilter(); return false; }" >
+                    <p:remoteCommand name="updateNameObjectifFilter" update="objectifsTable:nameObjectifFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{objectifs.nameObjectif}" />
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_objectifs_poids}" sortBy="#{objectifs.poids}" filterBy="#{objectifs.poids}">
+            <f:facet name="filter">
+                <p:inputText id="poidsFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('objectifsTable').filter(); updatePoidsFilter(); return false; }" >
+                    <f:convertNumber />
+                    <p:remoteCommand name="updatePoidsFilter" update="objectifsTable:poidsFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{objectifs.poids}"><f:convertNumber /></h:outputText>
+          </p:column>
+
+          <p:column  headerText="#{messages.field_label_objectifs_description}" sortBy="#{objectifs.description}" filterBy="#{objectifs.description}">
+            <f:facet name="filter">
+                <p:inputText id="descriptionFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('objectifsTable').filter(); updateDescriptionFilter(); return false; }" >
+                    <p:remoteCommand name="updateDescriptionFilter" update="objectifsTable:descriptionFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{objectifs.description}" />
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_objectifs_createdat}" sortBy="#{objectifs.createdat}" filterBy="#{objectifs.createdat}">
+            <f:facet name="filter">
+                <p:inputText id="createdatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('objectifsTable').filter(); updateCreatedatFilter(); return false;}" >
+                    <p:remoteCommand name="updateCreatedatFilter" update="objectifsTable:createdatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{objectifs.createdat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_objectifs_updatedat}" sortBy="#{objectifs.updatedat}" filterBy="#{objectifs.updatedat}">
+            <f:facet name="filter">
+                <p:inputText id="updatedatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('objectifsTable').filter(); updateUpdatedatFilter(); return false;}" >
+                    <p:remoteCommand name="updateUpdatedatFilter" update="objectifsTable:updatedatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{objectifs.updatedat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column styleClass="action-column" headerText="#{messages.table_actions_column}" width="115" exportable="false">
+            
+            <p:commandButton icon="ui-icon-zoomin" update=":viewObjectifsDialog" oncomplete="PF('viewObjectifsDialogWidget').show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{objectifs}" target="#{objectifsBean.objectifs}" />
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-pencil" update=":editObjectifsDialog"
+                resetValues="true" 
+                action="#{objectifsBean.onDialogOpen(objectifs)}"
+                oncomplete="PF('editObjectifsDialogWidget').show()"
+                title="#{messages.label_edit}" >
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-copy" update=":objectifsAttachmentsDialog" resetValues="true" oncomplete="PF('objectifsAttachmentsDialogWidget').show()" title="#{messages.label_attachments}">
+              <f:setPropertyActionListener value="#{objectifs}" target="#{objectifsBean.objectifs}" />
+            </p:commandButton>
+            
+            <p:commandButton icon="ui-icon-close" 
+                oncomplete="PF('deleteObjectifsDialogWidget').show()"
+                title="#{messages.label_delete}" >
+                <f:setPropertyActionListener value="#{objectifs}"
+                    target="#{objectifsBean.objectifs}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+        <h:panelGrid columns="2">
+            <p:panel header="#{messages.export_all_data}">
+
+                <h:commandLink>
+                    <h:graphicImage  name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="objectifsTable" fileName="Objectifss"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="objectifsTable" fileName="Objectifss"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="objectifsTable" fileName="Objectifss" />
+                </h:commandLink>
+
+            </p:panel>
+            
+            <p:panel header="#{messages.export_page_data}">
+                <h:commandLink>
+                    <h:graphicImage name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="objectifsTable" fileName="Objectifss" pageOnly="true"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="objectifsTable" fileName="Objectifss" pageOnly="true"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="objectifsTable" fileName="Objectifss" pageOnly="true"/>
+                </h:commandLink>
+                
+            </p:panel>
+        </h:panelGrid>
+        
+    </h:form>
+
+    <p:confirmDialog id="deleteObjectifsDialog" widgetVar="deleteObjectifsDialogWidget"
+        header="#{messages.label_confirm_deletion}"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="#{messages.label_delete_record}" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_yes}" action="#{objectifsBean.delete}" update=":objectifsDataForm :growlForm:growl" oncomplete="PF('deleteObjectifsDialogWidget').hide()" />
+              <p:commandButton value="#{messages.label_no}" onclick="PF('deleteObjectifsDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+    <p:dialog dynamic="true" id="editObjectifsDialog" header="#{messages.label_objectifs_caption}"
+            modal="true" widgetVar="editObjectifsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsBean.reset}"/>
+        <h:form id="editObjectifsForm" >
+            <p:outputPanel id="objectifsEditPanel">
+                <ui:include src="/pages/objectifs/objectifsEditInclude.xhtml"/>
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                            icon="ui-icon-disk" action="#{objectifsBean.persist}"
+                            update=":editObjectifsForm:objectifsEditPanel :objectifsDataForm :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('editObjectifsDialogWidget').hide()" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('editObjectifsDialogWidget').hide()" type="button" />
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="viewObjectifsDialog" header="#{messages.label_objectifs_caption}" modal="true" widgetVar="viewObjectifsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsBean.reset}" />
+        <h:form id="viewObjectifsForm">
+          <ui:include src="/pages/objectifs/objectifsViewInclude.xhtml"/>
+          <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('viewObjectifsDialogWidget').hide()" type="button" />
+          </div>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="objectifsAttachmentsDialog" header="#{messages.label_attachments}" modal="true" widgetVar="objectifsAttachmentsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{objectifsBean.reset}" />
+        <p:outputPanel id="objectifsAttachmentsPanel">
+            <ui:include src="/pages/objectifs/objectifsAttachmentsInclude.xhtml" />
+            <div style="text-align: center; margin:10px">
+                <h:form>
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('objectifsAttachmentsDialogWidget').hide()" type="button"/>
+                </h:form>
+            </div>
+        </p:outputPanel>
+    </p:dialog>
+    
+  </ui:define>
+</ui:composition>
+</html>

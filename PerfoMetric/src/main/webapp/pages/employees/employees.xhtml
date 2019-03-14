@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="employeesDataForm" onkeypress="if (event.keyCode == 13) {return false; }">
+
+        <p:dataTable id="employeesTable" value="#{employeesBean.employeesList}" var="employees" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="employeesTable" emptyMessage="#{messages.label_no_records_found}"
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="#{messages.create_new_employees}" icon="ui-icon-plusthick" action="#{employeesBean.prepareNewEmployees()}"
+                      resetValues="true" update=":editEmployeesDialog" oncomplete="PF('editEmployeesDialogWidget').show()"
+                      rendered="#{employeesBean.isPermitted('employees:create')}" style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="#{messages.table_select_columns}" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="employeesTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column headerText="#{messages.label_image}">
+              <o:graphicImage value="#{employees.image.content}" dataURI="true"
+                  rendered="#{not empty employees.image.content}" width="50px"/>
+          </p:column>
+          
+          <p:column  headerText="#{messages.field_label_employees_codeEmployee}" sortBy="#{employees.codeEmployee}" filterBy="#{employees.codeEmployee}">
+            <f:facet name="filter">
+                <p:inputText id="codeEmployeeFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('employeesTable').filter(); updateCodeEmployeeFilter(); return false; }" >
+                    <p:remoteCommand name="updateCodeEmployeeFilter" update="employeesTable:codeEmployeeFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{employees.codeEmployee}" />
+          </p:column>
+
+          <p:column  headerText="#{messages.field_label_employees_name}" sortBy="#{employees.name}" filterBy="#{employees.name}">
+            <f:facet name="filter">
+                <p:inputText id="nameFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('employeesTable').filter(); updateNameFilter(); return false; }" >
+                    <p:remoteCommand name="updateNameFilter" update="employeesTable:nameFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{employees.name}" />
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_employees_createat}" sortBy="#{employees.createat}" filterBy="#{employees.createat}">
+            <f:facet name="filter">
+                <p:inputText id="createatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('employeesTable').filter(); updateCreateatFilter(); return false;}" >
+                    <p:remoteCommand name="updateCreateatFilter" update="employeesTable:createatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{employees.createat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_employees_updateat}" sortBy="#{employees.updateat}" filterBy="#{employees.updateat}">
+            <f:facet name="filter">
+                <p:inputText id="updateatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('employeesTable').filter(); updateUpdateatFilter(); return false;}" >
+                    <p:remoteCommand name="updateUpdateatFilter" update="employeesTable:updateatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{employees.updateat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_employees_statusId}" sortBy="#{employees.statusId}" filterBy="#{employees.statusId}">
+            <f:facet name="filter">
+                <p:inputText id="statusIdFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('employeesTable').filter(); updateStatusIdFilter(); return false; }" >
+                    <p:remoteCommand name="updateStatusIdFilter" update="employeesTable:statusIdFilter" />
+                    <f:convertNumber integerOnly="true" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{employees.statusId}" ><f:convertNumber /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_employees_idPoste_plural}" styleClass="action-column" exportable="false">
+            
+            <p:commandButton icon="ui-icon-transfer-e-w"  title="#{messages.field_label_employees_idPoste_plural}" action="#{employeesBean.onIdPostesDialog(employees)}" oncomplete="PF('employeesIdPostesDialogWidget').show()" update=":employeesIdPostesDialog"/>
+            
+          </p:column>
+          
+          <p:column styleClass="action-column" headerText="#{messages.table_actions_column}" width="115" exportable="false">
+            
+            <p:commandButton icon="ui-icon-zoomin" update=":viewEmployeesDialog" oncomplete="PF('viewEmployeesDialogWidget').show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{employees}" target="#{employeesBean.employees}" />
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-pencil" update=":editEmployeesDialog"
+                resetValues="true" rendered="#{employeesBean.isPermitted(employees, 'employees:update')}"
+                action="#{employeesBean.onDialogOpen(employees)}"
+                oncomplete="PF('editEmployeesDialogWidget').show()"
+                title="#{messages.label_edit}" >
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-copy" update=":employeesAttachmentsDialog" resetValues="true" oncomplete="PF('employeesAttachmentsDialogWidget').show()" title="#{messages.label_attachments}">
+              <f:setPropertyActionListener value="#{employees}" target="#{employeesBean.employees}" />
+            </p:commandButton>
+            
+            <p:commandButton icon="ui-icon-close" rendered="#{employeesBean.isPermitted(employees, 'employees:delete')}"
+                oncomplete="PF('deleteEmployeesDialogWidget').show()"
+                title="#{messages.label_delete}" >
+                <f:setPropertyActionListener value="#{employees}"
+                    target="#{employeesBean.employees}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+        <h:panelGrid columns="2">
+            <p:panel header="#{messages.export_all_data}">
+
+                <h:commandLink>
+                    <h:graphicImage  name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="employeesTable" fileName="Employeess"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="employeesTable" fileName="Employeess"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="employeesTable" fileName="Employeess" />
+                </h:commandLink>
+
+            </p:panel>
+            
+            <p:panel header="#{messages.export_page_data}">
+                <h:commandLink>
+                    <h:graphicImage name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="employeesTable" fileName="Employeess" pageOnly="true"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="employeesTable" fileName="Employeess" pageOnly="true"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="employeesTable" fileName="Employeess" pageOnly="true"/>
+                </h:commandLink>
+                
+            </p:panel>
+        </h:panelGrid>
+        
+    </h:form>
+
+    <p:confirmDialog id="deleteEmployeesDialog" widgetVar="deleteEmployeesDialogWidget"
+        rendered="#{employeesBean.isPermitted(employeesBean.employees, 'employees:delete')}" header="#{messages.label_confirm_deletion}"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="#{messages.label_delete_record}" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_yes}" action="#{employeesBean.delete}" update=":employeesDataForm :growlForm:growl" oncomplete="PF('deleteEmployeesDialogWidget').hide()" />
+              <p:commandButton value="#{messages.label_no}" onclick="PF('deleteEmployeesDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+    <p:dialog dynamic="true" id="editEmployeesDialog" header="#{messages.label_employees_caption}"
+            modal="true" widgetVar="editEmployeesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{employeesBean.reset}"/>
+        <h:form id="editEmployeesForm" >
+            <p:outputPanel id="employeesEditPanel">
+                <ui:include src="/pages/employees/employeesEditInclude.xhtml"/>
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                            icon="ui-icon-disk" action="#{employeesBean.persist}"
+                            update=":editEmployeesForm:employeesEditPanel :employeesDataForm :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('editEmployeesDialogWidget').hide()" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('editEmployeesDialogWidget').hide()" type="button" />
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="viewEmployeesDialog" header="#{messages.label_employees_caption}" modal="true" widgetVar="viewEmployeesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{employeesBean.reset}" />
+        <h:form id="viewEmployeesForm">
+          <ui:include src="/pages/employees/employeesViewInclude.xhtml"/>
+          <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('viewEmployeesDialogWidget').hide()" type="button" />
+          </div>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="employeesAttachmentsDialog" header="#{messages.label_attachments}" modal="true" widgetVar="employeesAttachmentsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{employeesBean.reset}" />
+        <p:outputPanel id="employeesAttachmentsPanel">
+            <ui:include src="/pages/employees/employeesAttachmentsInclude.xhtml" />
+            <div style="text-align: center; margin:10px">
+                <h:form>
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('employeesAttachmentsDialogWidget').hide()" type="button"/>
+                </h:form>
+            </div>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="employeesIdPostesDialog" header="#{messages.dialog_header_employees_idPoste_plural}" modal="true" widgetVar="employeesIdPostesDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{employeesBean.reset}" />
+        <p:outputPanel id="employeesIdPostesPanel">
+            <h:form id="employeesIdPostesForm">
+                <ui:include src="/pages/employees/employeesIdPosteInclude.xhtml" />
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                        icon="ui-icon-disk"
+                        action="#{employeesBean.onIdPostesSubmit}"
+                        update=":growlForm:growl"
+                        oncomplete="if(!args.validationFailed) PF('employeesIdPostesDialogWidget').hide()"
+                        rendered="#{employeesBean.isPermitted(employeesBean.employees, 'employees:update')}"
+                        partialSubmit="true" process="@this" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('employeesIdPostesDialogWidget').hide()" type="button" />
+                </div>
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="createIdPosteDialog"
+        rendered="#{employeesBean.isPermitted('postes:create')}"
+        header="#{messages.dialog_employees_create_idPoste}" modal="true"
+        widgetVar="createIdPosteDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{postesBean.reset}" />
+        <p:outputPanel id="createIdPostePanel">
+                <h:form id="createIdPosteForm">
+                    <ui:include src="/pages/postes/postesEditInclude.xhtml">
+                        <ui:param name="hideEmployeesSelectInput" value="true" />
+                    </ui:include>
+                    <div style="text-align: center; margin: 10px">
+                        <p:commandButton
+                            action="#{employeesBean.updateIdPoste(postesBean.postes)}"
+                            value="#{messages.label_save}" icon="ui-icon-disk"
+                            actionListener="#{postesBean.persist}"
+                            update=":employeesIdPostesPanel :createIdPostePanel :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('createIdPosteDialogWidget').hide()" />
+                        <p:commandButton value="#{messages.label_close}"
+                            icon="ui-icon-close"
+                            onclick="PF('createIdPosteDialogWidget').hide()"
+                            type="button" />
+                    </div>
+                </h:form>
+            </p:outputPanel>
+    </p:dialog>
+    
+  </ui:define>
+</ui:composition>
+</html>

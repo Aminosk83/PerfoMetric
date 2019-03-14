@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="departementsDataForm" onkeypress="if (event.keyCode == 13) {return false; }">
+
+        <p:dataTable id="departementsTable" value="#{departementsBean.departementsList}" var="departements" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="departementsTable" emptyMessage="#{messages.label_no_records_found}"
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="#{messages.create_new_departements}" icon="ui-icon-plusthick" action="#{departementsBean.prepareNewDepartements()}"
+                      resetValues="true" update=":editDepartementsDialog" oncomplete="PF('editDepartementsDialogWidget').show()"
+                      rendered="#{departementsBean.isPermitted('departements:create')}" style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="#{messages.table_select_columns}" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="departementsTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column headerText="#{messages.label_image}">
+              <o:graphicImage value="#{departements.image.content}" dataURI="true"
+                  rendered="#{not empty departements.image.content}" width="50px"/>
+          </p:column>
+          
+          <p:column  headerText="#{messages.field_label_departements_codeDepartement}" sortBy="#{departements.codeDepartement}" filterBy="#{departements.codeDepartement}">
+            <f:facet name="filter">
+                <p:inputText id="codeDepartementFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('departementsTable').filter(); updateCodeDepartementFilter(); return false; }" >
+                    <p:remoteCommand name="updateCodeDepartementFilter" update="departementsTable:codeDepartementFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{departements.codeDepartement}" />
+          </p:column>
+
+          <p:column  headerText="#{messages.field_label_departements_nameDepartement}" sortBy="#{departements.nameDepartement}" filterBy="#{departements.nameDepartement}">
+            <f:facet name="filter">
+                <p:inputText id="nameDepartementFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('departementsTable').filter(); updateNameDepartementFilter(); return false; }" >
+                    <p:remoteCommand name="updateNameDepartementFilter" update="departementsTable:nameDepartementFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{departements.nameDepartement}" />
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_departements_createdat}" sortBy="#{departements.createdat}" filterBy="#{departements.createdat}">
+            <f:facet name="filter">
+                <p:inputText id="createdatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('departementsTable').filter(); updateCreatedatFilter(); return false;}" >
+                    <p:remoteCommand name="updateCreatedatFilter" update="departementsTable:createdatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{departements.createdat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column headerText="#{messages.field_label_departements_updatedat}" sortBy="#{departements.updatedat}" filterBy="#{departements.updatedat}">
+            <f:facet name="filter">
+                <p:inputText id="updatedatFilter"
+                        onkeyup="if (event.keyCode == 13) {PF('departementsTable').filter(); updateUpdatedatFilter(); return false;}" >
+                    <p:remoteCommand name="updateUpdatedatFilter" update="departementsTable:updatedatFilter" />
+                    <f:convertDateTime />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{departements.updatedat}"><f:convertDateTime /></h:outputText>
+          </p:column>
+
+          <p:column styleClass="action-column" headerText="#{messages.table_actions_column}" width="115" exportable="false">
+            
+            <p:commandButton icon="ui-icon-zoomin" update=":viewDepartementsDialog" oncomplete="PF('viewDepartementsDialogWidget').show()" title="#{messages.label_view}">
+              <f:setPropertyActionListener value="#{departements}" target="#{departementsBean.departements}" />
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-pencil" update=":editDepartementsDialog"
+                resetValues="true" rendered="#{departementsBean.isPermitted(departements, 'departements:update')}"
+                action="#{departementsBean.onDialogOpen(departements)}"
+                oncomplete="PF('editDepartementsDialogWidget').show()"
+                title="#{messages.label_edit}" >
+            </p:commandButton>
+
+            <p:commandButton icon="ui-icon-copy" update=":departementsAttachmentsDialog" resetValues="true" oncomplete="PF('departementsAttachmentsDialogWidget').show()" title="#{messages.label_attachments}">
+              <f:setPropertyActionListener value="#{departements}" target="#{departementsBean.departements}" />
+            </p:commandButton>
+            
+            <p:commandButton icon="ui-icon-close" rendered="#{departementsBean.isPermitted(departements, 'departements:delete')}"
+                oncomplete="PF('deleteDepartementsDialogWidget').show()"
+                title="#{messages.label_delete}" >
+                <f:setPropertyActionListener value="#{departements}"
+                    target="#{departementsBean.departements}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+        <h:panelGrid columns="2">
+            <p:panel header="#{messages.export_all_data}">
+
+                <h:commandLink>
+                    <h:graphicImage  name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="departementsTable" fileName="Departementss"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="departementsTable" fileName="Departementss"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="departementsTable" fileName="Departementss" />
+                </h:commandLink>
+
+            </p:panel>
+            
+            <p:panel header="#{messages.export_page_data}">
+                <h:commandLink>
+                    <h:graphicImage name="images/excel.png" alt="Excel|" />
+                    <p:dataExporter type="xls" target="departementsTable" fileName="Departementss" pageOnly="true"/>
+                </h:commandLink>
+
+                <h:commandLink>
+                    <h:graphicImage name="images/pdf.png" alt="PDF|" />
+                    <p:dataExporter type="pdf" target="departementsTable" fileName="Departementss" pageOnly="true"/>
+                </h:commandLink>
+                
+                <h:commandLink>
+                    <h:graphicImage name="images/csv.png" alt="CSV" />
+                    <p:dataExporter type="csv" target="departementsTable" fileName="Departementss" pageOnly="true"/>
+                </h:commandLink>
+                
+            </p:panel>
+        </h:panelGrid>
+        
+    </h:form>
+
+    <p:confirmDialog id="deleteDepartementsDialog" widgetVar="deleteDepartementsDialogWidget"
+        rendered="#{departementsBean.isPermitted(departementsBean.departements, 'departements:delete')}" header="#{messages.label_confirm_deletion}"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="#{messages.label_delete_record}" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_yes}" action="#{departementsBean.delete}" update=":departementsDataForm :growlForm:growl" oncomplete="PF('deleteDepartementsDialogWidget').hide()" />
+              <p:commandButton value="#{messages.label_no}" onclick="PF('deleteDepartementsDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+    <p:dialog dynamic="true" id="editDepartementsDialog" header="#{messages.label_departements_caption}"
+            modal="true" widgetVar="editDepartementsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{departementsBean.reset}"/>
+        <h:form id="editDepartementsForm" >
+            <p:outputPanel id="departementsEditPanel">
+                <ui:include src="/pages/departements/departementsEditInclude.xhtml"/>
+                <div style="text-align: center; margin:10px">
+                    <p:commandButton value="#{messages.label_save}"
+                            icon="ui-icon-disk" action="#{departementsBean.persist}"
+                            update=":editDepartementsForm:departementsEditPanel :departementsDataForm :growlForm:growl"
+                            oncomplete="if(!args.validationFailed) PF('editDepartementsDialogWidget').hide()" />
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('editDepartementsDialogWidget').hide()" type="button" />
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="viewDepartementsDialog" header="#{messages.label_departements_caption}" modal="true" widgetVar="viewDepartementsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{departementsBean.reset}" />
+        <h:form id="viewDepartementsForm">
+          <ui:include src="/pages/departements/departementsViewInclude.xhtml"/>
+          <div style="text-align: center; margin:10px">
+              <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('viewDepartementsDialogWidget').hide()" type="button" />
+          </div>
+        </h:form>
+    </p:dialog>
+    
+    <p:dialog dynamic="true" id="departementsAttachmentsDialog" header="#{messages.label_attachments}" modal="true" widgetVar="departementsAttachmentsDialogWidget" maximizable="true">
+        <p:ajax event="close" listener="#{departementsBean.reset}" />
+        <p:outputPanel id="departementsAttachmentsPanel">
+            <ui:include src="/pages/departements/departementsAttachmentsInclude.xhtml" />
+            <div style="text-align: center; margin:10px">
+                <h:form>
+                    <p:commandButton value="#{messages.label_close}" icon="ui-icon-close" onclick="PF('departementsAttachmentsDialogWidget').hide()" type="button"/>
+                </h:form>
+            </div>
+        </p:outputPanel>
+    </p:dialog>
+    
+  </ui:define>
+</ui:composition>
+</html>
